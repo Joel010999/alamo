@@ -4,17 +4,20 @@ const session = require('express-session');
 const fs = require('fs-extra');
 const path = require('path');
 const multer = require('multer');
+const { Pool } = require('pg');
+
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configuration
-const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const ADMIN_PASSWORD = 'bornand';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'bornand';
 
 // Ensure directories exist
-fs.ensureDirSync(path.join(__dirname, 'data'));
 fs.ensureDirSync(UPLOADS_DIR);
 
 // Middleware
@@ -39,28 +42,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Storage functions
-async function readProducts() {
-    try {
-        const data = await fs.readFile(PRODUCTS_FILE, 'utf8');
-        const products = JSON.parse(data);
-        // Migration: Ensure all have "images" array
-        return products.map(p => {
-            if (!p.images && p.image) {
-                p.images = [p.image];
-            } else if (!p.images) {
-                p.images = [];
-            }
-            return p;
-        });
-    } catch (error) {
-        return [];
-    }
-}
-
-async function writeProducts(products) {
-    await fs.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 4));
-}
+// Storage handled by PostgreSQL
 
 // Auth Middleware
 const requireAuth = (req, res, next) => {
@@ -95,14 +77,17 @@ app.get('/api/check-auth', (req, res) => {
 
 // Products CRUD
 app.get('/api/products', async (req, res) => {
-    const products = await readProducts();
-    res.json(products);
+    try {
+        const result = await pool.query('SELECT * FROM products ORDER BY id DESC');
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ error: 'Error al obtener productos' });
+    }
 });
 
 app.post('/api/products', requireAuth, upload.array('images', 10), async (req, res) => {
     try {
-        const products = await readProducts();
-        
         // Handle images
         let images = [];
         if (req.files && req.files.length > 0) {
@@ -111,19 +96,16 @@ app.post('/api/products', requireAuth, upload.array('images', 10), async (req, r
             images = [req.body.image];
         }
 
-        const newProduct = {
-            id: Date.now(),
-            name: req.body.name,
-            price: req.body.price,
-            talle: req.body.talle || "",
-            color: req.body.color || "",
-            images: images,
-            image: images[0] || "" // Keep single image for compatibility
-        };
-        products.push(newProduct);
-        await writeProducts(products);
-        res.json(newProduct);
+        const image = images[0] || "";
+
+        const result = await pool.query(
+            'INSERT INTO products (name, price, talle, color, image, images) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            [req.body.name, req.body.price, req.body.talle || "", req.body.color || "", image, JSON.stringify(images)]
+        );
+        
+        res.json(result.rows[0]);
     } catch (error) {
+        console.error("Error creating product:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -131,36 +113,41 @@ app.post('/api/products', requireAuth, upload.array('images', 10), async (req, r
 app.put('/api/products/:id', requireAuth, upload.array('images', 10), async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const products = await readProducts();
-        const index = products.findIndex(p => p.id === id);
         
-        if (index === -1) return res.status(404).json({ error: 'Producto no encontrado' });
+        const currentResult = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+        if (currentResult.rows.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });
+        
+        const currentProduct = currentResult.rows[0];
 
-        const updatedProduct = {
-            ...products[index],
-            name: req.body.name || products[index].name,
-            price: req.body.price || products[index].price,
-            talle: req.body.talle !== undefined ? req.body.talle : products[index].talle,
-            color: req.body.color !== undefined ? req.body.color : products[index].color
-        };
+        const name = req.body.name || currentProduct.name;
+        const price = req.body.price || currentProduct.price;
+        const talle = req.body.talle !== undefined ? req.body.talle : currentProduct.talle;
+        const color = req.body.color !== undefined ? req.body.color : currentProduct.color;
+
+        let images = currentProduct.images;
+        let image = currentProduct.image;
 
         if (req.files && req.files.length > 0) {
             // Delete old images if they were in uploads
-            const oldImages = products[index].images || (products[index].image ? [products[index].image] : []);
+            const oldImages = currentProduct.images || (currentProduct.image ? [currentProduct.image] : []);
             for (const img of oldImages) {
                 if (img && img.startsWith('uploads/')) {
                     const oldPath = path.join(__dirname, img);
                     if (await fs.exists(oldPath)) await fs.remove(oldPath);
                 }
             }
-            updatedProduct.images = req.files.map(f => `uploads/${f.filename}`);
-            updatedProduct.image = updatedProduct.images[0];
+            images = req.files.map(f => `uploads/${f.filename}`);
+            image = images[0];
         }
 
-        products[index] = updatedProduct;
-        await writeProducts(products);
-        res.json(updatedProduct);
+        const updateResult = await pool.query(
+            'UPDATE products SET name = $1, price = $2, talle = $3, color = $4, image = $5, images = $6 WHERE id = $7 RETURNING *',
+            [name, price, talle, color, image, JSON.stringify(images), id]
+        );
+
+        res.json(updateResult.rows[0]);
     } catch (error) {
+        console.error("Error updating product:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -168,10 +155,11 @@ app.put('/api/products/:id', requireAuth, upload.array('images', 10), async (req
 app.delete('/api/products/:id', requireAuth, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        let products = await readProducts();
-        const product = products.find(p => p.id === id);
         
-        if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
+        const currentResult = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+        if (currentResult.rows.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });
+        
+        const product = currentResult.rows[0];
 
         // Delete all associated images
         const imagesToDelete = product.images || (product.image ? [product.image] : []);
@@ -182,10 +170,11 @@ app.delete('/api/products/:id', requireAuth, async (req, res) => {
             }
         }
 
-        products = products.filter(p => p.id !== id);
-        await writeProducts(products);
+        await pool.query('DELETE FROM products WHERE id = $1', [id]);
+        
         res.json({ success: true });
     } catch (error) {
+        console.error("Error deleting product:", error);
         res.status(500).json({ error: error.message });
     }
 });
