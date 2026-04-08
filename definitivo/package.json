@@ -1,0 +1,21 @@
+{
+  "name": "alamo-catalogo",
+  "version": "1.0.0",
+  "description": "Catálogo de Indumentaria ÁLAMO",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "fs-extra": "^11.3.4",
+    "multer": "^2.1.1",
+    "serve": "^14.2.4"
+  },
+  "keywords": [],
+  "author": "RenderByte",
+  "license": "ISC"
+}

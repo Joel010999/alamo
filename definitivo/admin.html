@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÁLAMO - Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-page">
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card">
+            <h1>ÁLAMO</h1>
+            <p>Admin Login</p>
+            <form id="login-form">
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                <p id="login-error" class="error-msg"></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-content" class="admin-content" style="display: none;">
+        <header class="admin-header">
+            <div class="container admin-nav">
+                <a href="/" class="logo">ÁLAMO</a>
+                <div class="header-actions">
+                    <button id="logout-btn" class="btn btn-secondary btn-sm"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container admin-main">
+            <div class="dashboard-header">
+                <h2>Gestión de Productos</h2>
+                <button id="add-product-btn" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo Producto</button>
+            </div>
+
+            <div class="products-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Talle/Color</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-list">
+                        <!-- Products will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Product Modal (Add/Edit) -->
+        <div id="product-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3 id="modal-title">Agregar Producto</h3>
+                <form id="product-form" enctype="multipart/form-data">
+                    <input type="hidden" id="product-id">
+                    
+                    <div class="form-group">
+                        <label for="name">Nombre del Producto</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Precio (ej: $40.000)</label>
+                        <input type="text" id="price" name="price" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="talle">Talles (opcional)</label>
+                            <input type="text" id="talle" name="talle" placeholder="ej: M, L">
+                        </div>
+                        <div class="form-group">
+                            <label for="color">Colores (opcional)</label>
+                            <input type="text" id="color" name="color" placeholder="ej: Blanco, Negro">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="images">Imágenes del Producto (una o varias)</label>
+                        <input type="file" id="images" name="images" accept="image/*" multiple>
+                        <p class="form-help">Seleccioná uno o más archivos para el carrusel.</p>
+                        <div id="image-preview" class="image-preview-gallery"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
