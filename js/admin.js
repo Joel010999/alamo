@@ -82,12 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    let sortableInstance = null;
+
     function renderTable(products) {
         productsList.innerHTML = '';
         products.forEach(p => {
             const tr = document.createElement('tr');
+            tr.dataset.id = p.id;
             const mainImg = (p.images && p.images.length > 0) ? p.images[0] : p.image;
             tr.innerHTML = `
+                <td class="drag-handle" style="cursor: grab; color: #ccc; text-align: center;"><i class="fas fa-bars"></i></td>
                 <td><img src="${mainImg}" alt="${p.name}" class="table-img"></td>
                 <td><strong>${p.name}</strong></td>
                 <td>${p.price}</td>
@@ -102,6 +106,24 @@ document.addEventListener('DOMContentLoaded', () => {
             tr.querySelector('.delete-btn').onclick = () => deleteProduct(p.id);
             
             productsList.appendChild(tr);
+        });
+
+        if (sortableInstance) sortableInstance.destroy();
+        sortableInstance = new Sortable(productsList, {
+            handle: '.drag-handle',
+            animation: 150,
+            onEnd: async function () {
+                const orderedIds = Array.from(productsList.children).map(tr => parseInt(tr.dataset.id));
+                try {
+                    await fetch('/api/products/reorder', {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ orderedIds })
+                    });
+                } catch (e) {
+                    console.error("Error al reordenar", e);
+                }
+            }
         });
     }
 

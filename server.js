@@ -10,6 +10,10 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
+// Migrate DB to include position field if not exists
+pool.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS "position" INTEGER DEFAULT 0;')
+    .catch(err => console.error("Error migrating DB:", err));
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -78,11 +82,26 @@ app.get('/api/check-auth', (req, res) => {
 // Products CRUD
 app.get('/api/products', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM products ORDER BY id DESC');
+        const result = await pool.query('SELECT * FROM products ORDER BY position ASC, id DESC');
         res.json(result.rows);
     } catch (error) {
         console.error("Error fetching products:", error);
         res.status(500).json({ error: 'Error al obtener productos' });
+    }
+});
+
+app.patch('/api/products/reorder', requireAuth, async (req, res) => {
+    try {
+        const { orderedIds } = req.body;
+        if (!Array.isArray(orderedIds)) return res.status(400).json({ error: 'orderedIds must be an array' });
+        
+        for (let i = 0; i < orderedIds.length; i++) {
+            await pool.query('UPDATE products SET position = $1 WHERE id = $2', [i, orderedIds[i]]);
+        }
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error reordering products:", error);
+        res.status(500).json({ error: 'Error al reordenar productos' });
     }
 });
 
