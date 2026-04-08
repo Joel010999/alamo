@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isEditing = false;
     let currentId = null;
+    let selectedFiles = [];
 
     // --- Authentication ---
 
@@ -109,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function openAddModal() {
         isEditing = false;
         currentId = null;
+        selectedFiles = [];
         modalTitle.textContent = 'Agregar Producto';
         productForm.reset();
         imagePreview.innerHTML = '';
@@ -118,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function openEditModal(product) {
         isEditing = true;
         currentId = product.id;
+        selectedFiles = [];
         modalTitle.textContent = 'Editar Producto';
         
         document.getElementById('product-id').value = product.id;
@@ -140,28 +143,42 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target == productModal) productModal.style.display = 'none'; 
     };
 
-    imageInput.onchange = (e) => {
-        const files = Array.from(e.target.files);
+    function renderPreviews() {
         imagePreview.innerHTML = '';
-        files.forEach(file => {
+        selectedFiles.forEach(file => {
             const reader = new FileReader();
             reader.onload = (e) => {
-                imagePreview.innerHTML += `<div class="preview-item"><img src="${e.target.result}" /></div>`;
+                imagePreview.innerHTML += `<div class="preview-item"><img src="${e.target.result}" title="${file.name}" /></div>`;
             };
             reader.readAsDataURL(file);
         });
+    }
+
+    imageInput.onchange = (e) => {
+        const files = Array.from(e.target.files);
+        // Accumulate newly selected files
+        selectedFiles.push(...files);
+        
+        // Sort alphabetically by file name
+        selectedFiles.sort((a, b) => a.name.localeCompare(b.name));
+        
+        // Reset input value so it allows selecting the same file again
+        // and prevents FormData from blindly taking only the last batch
+        imageInput.value = '';
+        
+        // Update the preview
+        renderPreviews();
     };
 
     productForm.onsubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(productForm);
         
-        // Ensure multiple images are captured correctly
-        const files = imageInput.files;
-        if (files.length > 0) {
-            formData.delete('images'); // Clear old ones if any
-            for (let i = 0; i < files.length; i++) {
-                formData.append('images', files[i]);
+        // Ensure accumulated and sorted multiple images are captured correctly
+        if (selectedFiles.length > 0) {
+            formData.delete('images'); // Clear any empty/default input values grab by FormData
+            for (let i = 0; i < selectedFiles.length; i++) {
+                formData.append('images', selectedFiles[i]);
             }
         }
 
