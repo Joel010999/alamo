@@ -165,31 +165,47 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target == productModal) productModal.style.display = 'none'; 
     };
 
-    function renderPreviews() {
+    async function renderPreviews() {
         imagePreview.innerHTML = '';
-        selectedFiles.forEach(file => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                imagePreview.innerHTML += `<div class="preview-item"><img src="${e.target.result}" title="${file.name}" /></div>`;
+        
+        for (let i = 0; i < selectedFiles.length; i++) {
+            const file = selectedFiles[i];
+            const result = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+            
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `
+                <img src="${result}" title="${file.name}" />
+                <button type="button" class="remove-image-btn" data-index="${i}"><i class="fas fa-trash-alt"></i></button>
+            `;
+            imagePreview.appendChild(div);
+        }
+
+        document.querySelectorAll('.remove-image-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                const idx = parseInt(e.currentTarget.dataset.index);
+                selectedFiles.splice(idx, 1);
+                renderPreviews();
             };
-            reader.readAsDataURL(file);
         });
     }
 
-    imageInput.onchange = (e) => {
+    imageInput.onchange = async (e) => {
         const files = Array.from(e.target.files);
         // Accumulate newly selected files
         selectedFiles.push(...files);
-        
-        // Sort alphabetically by file name
-        selectedFiles.sort((a, b) => a.name.localeCompare(b.name));
         
         // Reset input value so it allows selecting the same file again
         // and prevents FormData from blindly taking only the last batch
         imageInput.value = '';
         
         // Update the preview
-        renderPreviews();
+        await renderPreviews();
     };
 
     productForm.onsubmit = async (e) => {

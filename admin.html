@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ÁLAMO - Admin Panel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/admin.css">
 </head>
+
 <body class="admin-page">
     <div id="login-overlay" class="login-overlay">
         <div class="login-card">
@@ -29,7 +33,8 @@
             <div class="container admin-nav">
                 <a href="/" class="logo">ÁLAMO</a>
                 <div class="header-actions">
-                    <button id="logout-btn" class="btn btn-secondary btn-sm"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+                    <button id="logout-btn" class="btn btn-secondary btn-sm"><i class="fas fa-sign-out-alt"></i> Cerrar
+                        Sesión</button>
                 </div>
             </div>
         </header>
@@ -66,7 +71,7 @@
                 <h3 id="modal-title">Agregar Producto</h3>
                 <form id="product-form" enctype="multipart/form-data">
                     <input type="hidden" id="product-id">
-                    
+
                     <div class="form-group">
                         <label for="name">Nombre del Producto</label>
                         <input type="text" id="name" name="name" required>
@@ -104,4 +109,5 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="js/admin.js"></script>
 </body>
+
 </html>
