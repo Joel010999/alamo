@@ -1,0 +1,103 @@
+[
+    {
+        "id": 1,
+        "name": "Conjunto Bruma",
+        "price": "$40.000",
+        "talle": "M, L",
+        "color": "Crudo, Blanco, Chocolate",
+        "image": "image copy 17.webp"
+    },
+    {
+        "id": 2,
+        "name": "Vestido Espalda Descubierta",
+        "price": "$30.000",
+        "talle": "S, M",
+        "image": "image copy 2.webp"
+    },
+    {
+        "id": 3,
+        "name": "Conjunto Arena",
+        "price": "$49.000",
+        "talle": "S, M, L",
+        "image": "image copy 7.webp"
+    },
+    {
+        "id": 4,
+        "name": "Conjunto Lino",
+        "price": "$48.000",
+        "talle": "S, M, L",
+        "image": "image copy 9.webp"
+    },
+    {
+        "id": 5,
+        "name": "Conjunto Rayado",
+        "price": "$29.000",
+        "talle": "M, L",
+        "image": "image copy 10.webp"
+    },
+    {
+        "id": 6,
+        "name": "Buzitos Finitos",
+        "price": "$20.000",
+        "talle": "S, M",
+        "color": "Gris, Marrón",
+        "image": "image copy 22.webp"
+    },
+    {
+        "id": 7,
+        "name": "Pantalón Amplio",
+        "price": "$25.000",
+        "talle": "M, L",
+        "color": "Negro, Beige, Marrón",
+        "image": "image copy 23.webp"
+    },
+    {
+        "id": 8,
+        "name": "Conjunto Short Chocolate",
+        "price": "$35.500",
+        "talle": "S, M",
+        "image": "image copy 6.webp"
+    },
+    {
+        "id": 9,
+        "name": "Básicas",
+        "price": "$15.000",
+        "talle": "S, M",
+        "color": "Marrón, Negro, Crudo",
+        "image": "image copy 29.webp"
+    },
+    {
+        "id": 10,
+        "name": "Roma Set",
+        "price": "$38.000",
+        "talle": "S, M, L",
+        "color": "Chocolate, Blanco",
+        "image": "image copy 12.webp"
+    },
+    {
+        "id": 11,
+        "name": "Top S/M",
+        "price": "$31.000",
+        "talle": "S, M",
+        "image": "image copy 13.webp"
+    },
+    {
+        "id": 12,
+        "name": "Cintos Leather",
+        "price": "$20.000",
+        "image": "image copy 19.webp"
+    },
+    {
+        "id": 13,
+        "name": "Lentes Premium",
+        "price": "$20.000",
+        "image": "image copy 24.webp"
+    },
+    {
+        "id": 14,
+        "name": "Conjunto Comfy",
+        "price": "$38.000",
+        "talle": "S, M, L",
+        "image": "image copy 27.webp"
+    }
+]

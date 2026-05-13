@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÁLAMO - Catálogo Indumentaria</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="has-dynamic-bg">
+    <div class="dynamic-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo text-logo">ÁLAMO</a>
+
+            <div class="nav-socials">
+                <a href="https://www.instagram.com/alamo.tiendaok?igsh=d3Z2eXJnMGM4dGtv" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61587053092785" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://api.whatsapp.com/send?phone=543512751860&text=Tu%20pedido%20aca" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-bg-image"></div>
+            <div class="hero-overlay"></div>
+            <div class="container hero-content">
+                <span class="subtitle fade-in">Nuevo Catálogo</span>
+                <h1 class="fade-in delay-1">
+                    <img src="image.webp" alt="ÁLAMO Logo" class="hero-logo-img">
+                </h1>
+
+                <p class="fade-in delay-2">Elegancia, minimalismo y estilo en cada prenda.</p>
+                <div class="hero-actions fade-in delay-3">
+                    <a href="#catalogo" class="btn btn-primary">Ver Catálogo</a>
+                    <a href="https://api.whatsapp.com/send?phone=543512751860&text=Hola,%20queria%20hacer%20una%20consulta%20sobre%20Álamo" target="_blank" class="btn btn-secondary"><i class="fab fa-whatsapp"></i> Contactar</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about section-padding" id="nosotros">
+            <div class="container about-grid">
+                <div class="about-text fade-in-up">
+                    <h2>Nuestra Esencia</h2>
+                    <p>En ÁLAMO creemos en el poder de la simpleza. Seleccionamos cuidadosamente cada prenda para ofrecerte una propuesta de valor basada en la calidad, el detalle y la estética contemporánea.</p>
+                </div>
+                <div class="about-image fade-in-up delay-1">
+                    <img src="image copy 4.webp" alt="Estilo Álamo" class="img-fluid rounded-image">
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products section-padding" id="catalogo">
+            <div class="container">
+                <div class="section-title fade-in-up">
+                    <h2>Colección</h2>
+                    <p>Explorá nuestras prendas exclusivas y consultanos directamente por WhatsApp.</p>
+                </div>
+                <div class="products-grid" id="products-container">
+                    <!-- Products injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Editorial Section -->
+        <section class="editorial section-padding" id="editorial">
+            <div class="container">
+                <div class="editorial-banner fade-in-up">
+                    <div class="editorial-content">
+                        <h2>Estilo que habla por ti</h2>
+                        <a href="#catalogo" class="btn btn-outline">Descubrir más</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="image.webp" alt="ÁLAMO Logo" class="footer-logo">
+                    <p>Indumentaria femenina con estilo boutique.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Enlaces rápidos</h3>
+                    <ul>
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#nosotros">Nosotros</a></li>
+                        <li><a href="#catalogo">Catálogo</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h3>Seguinos</h3>
+                    <div class="nav-socials">
+                        <a href="https://www.instagram.com/alamo.tiendaok?igsh=d3Z2eXJnMGM4dGtv" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61587053092785" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p><a href="https://renderbyte.net" target="_blank" class="renderbyte-link">RenderByte</a> | todos los derechos reservados</p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://api.whatsapp.com/send?phone=543512751860&text=Hola,%20quiero%20hacer%20una%20consulta" target="_blank" class="float-wa" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
