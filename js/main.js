@@ -3,6 +3,7 @@ const WHATSAPP_PHONE = "543512751860";
 
 // Current active filter
 let currentFilter = 'todos';
+let currentSearch = '';
 
 // Render Products from API
 async function renderProducts() {
@@ -120,6 +121,15 @@ function initFilterButtons() {
             applyFilter(category);
         });
     });
+
+    // Setup search input
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            currentSearch = e.target.value.toLowerCase().trim();
+            applyFilter(currentFilter);
+        });
+    }
 }
 
 function applyFilter(category) {
@@ -136,8 +146,12 @@ function applyFilter(category) {
 
     cards.forEach((card, index) => {
         const cardCategory = card.getAttribute('data-category');
+        const cardName = card.querySelector('.product-name').textContent.toLowerCase();
         
-        if (category === 'todos' || cardCategory === category) {
+        const matchesCategory = category === 'todos' || cardCategory === category;
+        const matchesSearch = currentSearch === '' || cardName.includes(currentSearch);
+
+        if (matchesCategory && matchesSearch) {
             card.classList.remove('filter-hidden');
             card.classList.add('filter-show');
             // Stagger animation
