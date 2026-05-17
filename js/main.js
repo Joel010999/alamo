@@ -148,10 +148,12 @@ function renderProducts(products) {
         if (hasMultipleImages) {
             setupCarousel(card.querySelector('.product-carousel'));
         }
-    });
 
-    // Re-init animations for new elements
-    initAnimations();
+        // Snappy staggered entry animation for cards
+        setTimeout(() => {
+            card.classList.add('is-visible');
+        }, 50 + (index % 6) * 40);
+    });
 }
 
 function setupCarousel(carousel) {
@@ -193,20 +195,23 @@ function setupCarousel(carousel) {
     });
 }
 
-// Scroll animations
-function initAnimations() {
+// Scroll animations for static layout elements (non-product cards)
+function initScrollAnimations() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target); // Optimize: stop observing once visible
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.05 });
 
-    // Slight delay to ensure elements are in DOM
-    setTimeout(() => {
-        document.querySelectorAll('.fade-in, .fade-in-up').forEach(el => observer.observe(el));
-    }, 200);
+    // Observe static sections (exclude product cards to let them animate in snappily)
+    document.querySelectorAll('.fade-in, .fade-in-up').forEach(el => {
+        if (!el.classList.contains('product-card')) {
+            observer.observe(el);
+        }
+    });
 }
 
 // Sticky Navbar
@@ -220,4 +225,5 @@ function initNavbar() {
 document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
     initNavbar();
+    initScrollAnimations();
 });
