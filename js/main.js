@@ -10,6 +10,9 @@ async function loadProducts() {
 
     try {
         const response = await fetch('/api/products');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         allProducts = await response.json();
         
         initFilters();

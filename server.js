@@ -12,12 +12,66 @@ let pool;
 
 if (USE_PG) {
     pool = new Pool({
-        connectionString: process.env.DATABASE_URL
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
     });
 
-    // Migrate DB to include position field if not exists
-    pool.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS "position" INTEGER DEFAULT 0;')
-        .catch(err => console.error("Error migrating DB:", err));
+    // Create table, seed if empty, and migrate DB
+    (async () => {
+        try {
+            await pool.query(`
+                CREATE TABLE IF NOT EXISTS products (
+                    id SERIAL PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    price VARCHAR(255) NOT NULL,
+                    talle VARCHAR(255) DEFAULT '',
+                    color VARCHAR(255) DEFAULT '',
+                    image TEXT DEFAULT '',
+                    images TEXT DEFAULT '[]',
+                    position INTEGER DEFAULT 0
+                );
+            `);
+            console.log("Database table 'products' is ready.");
+
+            // Migrate DB to include position field if not exists
+            await pool.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS "position" INTEGER DEFAULT 0;');
+
+            // Seed products from JSON if database table is empty
+            const countRes = await pool.query('SELECT COUNT(*) FROM products');
+            const count = parseInt(countRes.rows[0].count, 10);
+            if (count === 0) {
+                console.log("Database is empty. Seeding products from JSON file...");
+                const jsonPath = path.join(__dirname, 'data', 'products.json');
+                if (await fs.exists(jsonPath)) {
+                    const products = await fs.readJson(jsonPath);
+                    for (const p of products) {
+                        await pool.query(
+                            'INSERT INTO products (id, name, price, talle, color, image, images, position) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+                            [
+                                p.id,
+                                p.name || "",
+                                p.price || "",
+                                p.talle || "",
+                                p.color || "",
+                                p.image || "",
+                                JSON.stringify(p.images || []),
+                                p.position || 0
+                            ]
+                        );
+                    }
+                    console.log(`Seeded ${products.length} products into PostgreSQL.`);
+                    // Align the serial sequence with existing IDs
+                    await pool.query("SELECT setval('products_id_seq', COALESCE((SELECT MAX(id)+1 FROM products), 1), false)");
+                } else {
+                    console.log("No JSON file found to seed products.");
+                }
+            }
+        } catch (err) {
+            console.error("Error setting up DB:", err);
+        }
+    })();
 }
 
 const DATA_FILE = path.join(__dirname, 'data', 'products.json');
