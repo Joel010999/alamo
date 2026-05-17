@@ -1,178 +1,154 @@
 // Base WhatsApp Phone Number
 const WHATSAPP_PHONE = "543512751860";
 
-// Current active filter
-let currentFilter = 'todos';
-let currentSearch = '';
+let allProducts = [];
 
-// Render Products from API
-async function renderProducts() {
+// Load Products from API
+async function loadProducts() {
     const container = document.getElementById('products-container');
     if (!container) return;
 
     try {
         const response = await fetch('/api/products');
-        const products = await response.json();
+        allProducts = await response.json();
         
-        container.innerHTML = ''; // Clear existing
-
-        products.forEach((product, index) => {
-            const card = document.createElement('div');
-            const delayClass = `delay-${(index % 3) + 1}`; 
-            card.className = `product-card fade-in-up ${delayClass}`;
-            
-            // Set category data attribute for filtering
-            const category = (product.category || '').toLowerCase().trim();
-            card.setAttribute('data-category', category);
-
-            const images = product.images || [product.image];
-            const hasMultipleImages = images.length > 1;
-
-            // Construct message description
-            let detail = "";
-            if (product.talle) detail += ` [Talles: ${product.talle}]`;
-            if (product.color) detail += ` [Colores: ${product.color}]`;
-
-            const message = `Hola ÁLAMO, quiero consultar/comprar el producto: ${product.name} (${product.price})${detail}`;
-            const encodedMessage = encodeURIComponent(message);
-            const waLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}&text=${encodedMessage}`;
-
-            // Talle/Color UI labels
-            const talleHTML = product.talle ? `<span class="product-tag">Talle: ${product.talle}</span>` : "";
-            const colorHTML = product.color ? `<span class="product-tag">Color: ${product.color}</span>` : "";
-
-            // Category badge
-            const categoryLabel = product.category ? product.category.charAt(0).toUpperCase() + product.category.slice(1) : '';
-            const categoryHTML = categoryLabel ? `<span class="product-tag product-tag-category">${categoryLabel}</span>` : "";
-
-            // Carousel HTML
-            let mediaHTML = "";
-            if (hasMultipleImages) {
-                const items = images.map(img => `<div class="carousel-item"><img src="${img}" alt="${product.name}"></div>`).join('');
-                const dots = images.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>`).join('');
-                mediaHTML = `
-                    <div class="product-carousel" id="carousel-${product.id}">
-                        <div class="carousel-stage">${items}</div>
-                        <button class="carousel-nav carousel-prev"><i class="fas fa-chevron-left"></i></button>
-                        <button class="carousel-nav carousel-next"><i class="fas fa-chevron-right"></i></button>
-                        <div class="carousel-dots">${dots}</div>
-                    </div>
-                `;
-            } else {
-                mediaHTML = `<img src="${images[0] || 'placeholder.jpg'}" alt="${product.name}" class="product-image" loading="lazy">`;
-            }
-
-            card.innerHTML = `
-                <div class="product-image-wrapper">
-                    ${mediaHTML}
-                    <div class="product-overlay">
-                        <a href="${waLink}" target="_blank" class="btn btn-wa-overlay"><i class="fab fa-whatsapp"></i> Consultar</a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">${product.name}</h3>
-                    <p class="product-price">${product.price}</p>
-                    <div class="product-details">
-                        ${categoryHTML}
-                        ${talleHTML}
-                        ${colorHTML}
-                    </div>
-                    <a href="${waLink}" target="_blank" class="btn btn-wa-outline"><i class="fab fa-whatsapp"></i> Lo quiero</a>
-                </div>
-            `;
-
-            container.appendChild(card);
-
-            if (hasMultipleImages) {
-                setupCarousel(card.querySelector('.product-carousel'));
-            }
-        });
-
-        // Re-init animations for new elements
-        initAnimations();
-
-        // Apply current filter after rendering
-        applyFilter(currentFilter);
-
-        // Setup filter buttons
-        initFilterButtons();
-
+        initFilters();
+        renderProducts(allProducts);
     } catch (error) {
         console.error('Error fetching products:', error);
         container.innerHTML = '<p class="error-msg">Error al cargar el catálogo. Por favor reintentá más tarde.</p>';
     }
 }
 
-// --- Filter Logic ---
+function initFilters() {
+    const searchInput = document.getElementById('searchInput');
+    const filterBtns = document.querySelectorAll('.filter-btn');
 
-function initFilterButtons() {
-    const filterBar = document.getElementById('filter-bar');
-    if (!filterBar) return;
+    if (!searchInput || !filterBtns.length) return;
 
-    const buttons = filterBar.querySelectorAll('.filter-btn');
-    buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Update active state
-            buttons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    let currentQuery = '';
+    let currentCategory = 'todos';
 
-            const category = btn.getAttribute('data-category');
-            currentFilter = category;
-            applyFilter(category);
-        });
+    function applyFilters() {
+        let filtered = allProducts;
+        
+        // Filter by category
+        if (currentCategory !== 'todos') {
+            filtered = filtered.filter(p => {
+                const name = (p.name || '').toLowerCase();
+                if (currentCategory === 'remeras') return name.includes('remera') || name.includes('musculosa') || name.includes('top') || name.includes('remeron');
+                if (currentCategory === 'pantalones') return name.includes('pantalon') || name.includes('palazo') || name.includes('pollera') || name.includes('jean') || name.includes('short');
+                if (currentCategory === 'conjuntos') return name.includes('conjunto');
+                if (currentCategory === 'abrigos') return name.includes('buzo') || name.includes('buzito') || name.includes('campera') || name.includes('sweater') || name.includes('abrigo');
+                if (currentCategory === 'accesorios') return name.includes('cinto') || name.includes('lentes') || name.includes('collar') || name.includes('bolso') || name.includes('accesorio') || name.includes('lenceria');
+                return true;
+            });
+        }
+
+        // Filter by search query (name, color, talle)
+        if (currentQuery) {
+            const q = currentQuery.toLowerCase();
+            filtered = filtered.filter(p => {
+                return ((p.name || '').toLowerCase().includes(q)) ||
+                       ((p.color || '').toLowerCase().includes(q)) ||
+                       ((p.talle || '').toLowerCase().includes(q));
+            });
+        }
+
+        renderProducts(filtered);
+    }
+
+    searchInput.addEventListener('input', (e) => {
+        currentQuery = e.target.value;
+        applyFilters();
     });
 
-    // Setup search input
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            currentSearch = e.target.value.toLowerCase().trim();
-            applyFilter(currentFilter);
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = btn.dataset.category;
+            applyFilters();
         });
-    }
+    });
 }
 
-function applyFilter(category) {
+function renderProducts(products) {
     const container = document.getElementById('products-container');
     if (!container) return;
-
-    const cards = container.querySelectorAll('.product-card');
     
-    // Remove any previous empty state
-    const existingEmpty = container.querySelector('.filter-empty');
-    if (existingEmpty) existingEmpty.remove();
+    container.innerHTML = ''; // Clear existing
 
-    let visibleCount = 0;
+    if (products.length === 0) {
+        container.innerHTML = '<p class="no-results fade-in-up" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #555; font-size: 1.2rem;">No se encontraron prendas con estos filtros.</p>';
+        return;
+    }
 
-    cards.forEach((card, index) => {
-        const cardCategory = card.getAttribute('data-category');
-        const cardName = card.querySelector('.product-name').textContent.toLowerCase();
-        
-        const matchesCategory = category === 'todos' || cardCategory === category;
-        const matchesSearch = currentSearch === '' || cardName.includes(currentSearch);
+    products.forEach((product, index) => {
+        const card = document.createElement('div');
+        const delayClass = `delay-${(index % 3) + 1}`; 
+        card.className = `product-card fade-in-up ${delayClass}`;
 
-        if (matchesCategory && matchesSearch) {
-            card.classList.remove('filter-hidden');
-            card.classList.add('filter-show');
-            // Stagger animation
-            card.style.animationDelay = `${visibleCount * 0.06}s`;
-            visibleCount++;
+        const images = product.images || [product.image];
+        const hasMultipleImages = images.length > 1;
+
+        // Construct message description
+        let detail = "";
+        if (product.talle) detail += ` [Talles: ${product.talle}]`;
+        if (product.color) detail += ` [Colores: ${product.color}]`;
+
+        const message = `Hola ÁLAMO, quiero consultar/comprar el producto: ${product.name} (${product.price})${detail}`;
+        const encodedMessage = encodeURIComponent(message);
+        const waLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}&text=${encodedMessage}`;
+
+        // Talle/Color UI labels
+        const talleHTML = product.talle ? `<span class="product-tag">Talle: ${product.talle}</span>` : "";
+        const colorHTML = product.color ? `<span class="product-tag">Color: ${product.color}</span>` : "";
+
+        // Carousel HTML
+        let mediaHTML = "";
+        if (hasMultipleImages) {
+            const items = images.map(img => `<div class="carousel-item"><img src="${img}" alt="${product.name}"></div>`).join('');
+            const dots = images.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>`).join('');
+            mediaHTML = `
+                <div class="product-carousel" id="carousel-${product.id}">
+                    <div class="carousel-stage">${items}</div>
+                    <button class="carousel-nav carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-nav carousel-next"><i class="fas fa-chevron-right"></i></button>
+                    <div class="carousel-dots">${dots}</div>
+                </div>
+            `;
         } else {
-            card.classList.add('filter-hidden');
-            card.classList.remove('filter-show');
+            mediaHTML = `<img src="${images[0] || 'placeholder.jpg'}" alt="${product.name}" class="product-image" loading="lazy">`;
+        }
+
+        card.innerHTML = `
+            <div class="product-image-wrapper">
+                ${mediaHTML}
+                <div class="product-overlay">
+                    <a href="${waLink}" target="_blank" class="btn btn-wa-overlay"><i class="fab fa-whatsapp"></i> Consultar</a>
+                </div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-price">${product.price}</p>
+                <div class="product-details">
+                    ${talleHTML}
+                    ${colorHTML}
+                </div>
+                <a href="${waLink}" target="_blank" class="btn btn-wa-outline"><i class="fab fa-whatsapp"></i> Lo quiero</a>
+            </div>
+        `;
+
+        container.appendChild(card);
+
+        if (hasMultipleImages) {
+            setupCarousel(card.querySelector('.product-carousel'));
         }
     });
 
-    // Show empty state if no products match
-    if (visibleCount === 0) {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.className = 'filter-empty';
-        emptyDiv.innerHTML = `
-            <i class="fas fa-search"></i>
-            <p>No hay productos en esta categoría por ahora.</p>
-        `;
-        container.appendChild(emptyDiv);
-    }
+    // Re-init animations for new elements
+    initAnimations();
 }
 
 function setupCarousel(carousel) {
@@ -239,6 +215,6 @@ function initNavbar() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderProducts();
+    loadProducts();
     initNavbar();
 });

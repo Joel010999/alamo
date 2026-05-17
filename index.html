@@ -71,22 +71,22 @@
                     <h2>Colección</h2>
                     <p>Explorá nuestras prendas exclusivas y consultanos directamente por WhatsApp.</p>
                 </div>
-                <div class="search-container fade-in-up delay-1">
-                    <div class="search-wrapper">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="search-input" class="search-input" placeholder="Buscar prenda...">
+                
+                <div class="filter-section fade-in-up delay-1">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar por prenda, color, talle...">
+                    </div>
+                    <div class="category-filters">
+                        <button class="filter-btn active" data-category="todos">Todos</button>
+                        <button class="filter-btn" data-category="remeras">Tops & Remeras</button>
+                        <button class="filter-btn" data-category="pantalones">Pantalones</button>
+                        <button class="filter-btn" data-category="conjuntos">Conjuntos</button>
+                        <button class="filter-btn" data-category="abrigos">Abrigos</button>
+                        <button class="filter-btn" data-category="accesorios">Accesorios</button>
                     </div>
                 </div>
-                <div class="filter-bar fade-in-up delay-1" id="filter-bar">
-                    <button class="filter-btn active" data-category="todos">Todos</button>
-                    <button class="filter-btn" data-category="conjuntos">Conjuntos</button>
-                    <button class="filter-btn" data-category="vestidos">Vestidos</button>
-                    <button class="filter-btn" data-category="tops">Tops</button>
-                    <button class="filter-btn" data-category="buzos">Buzos</button>
-                    <button class="filter-btn" data-category="pantalones">Pantalones</button>
-                    <button class="filter-btn" data-category="remeras">Remeras</button>
-                    <button class="filter-btn" data-category="accesorios">Accesorios</button>
-                </div>
+
                 <div class="products-grid" id="products-container">
                     <!-- Products injected via JS -->
                 </div>
@@ -111,7 +111,7 @@
         <div class="container">
             <div class="footer-top">
                 <div class="footer-brand">
-                    <img src="image.webp" alt="ÁLAMO Logo" class="footer-logo">
+                    <h2 class="logo text-logo" style="color: white; margin-bottom: 24px;">ÁLAMO</h2>
                     <p>Indumentaria femenina con estilo boutique.</p>
                 </div>
                 <div class="footer-links">

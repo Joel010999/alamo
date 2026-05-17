@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tr.innerHTML = `
                 <td class="drag-handle" style="cursor: grab; color: #ccc; text-align: center;"><i class="fas fa-bars"></i></td>
                 <td><img src="${mainImg}" alt="${p.name}" class="table-img"></td>
-                <td><strong>${p.name}</strong>${p.category ? `<br><span class="category-badge">${p.category}</span>` : ''}</td>
+                <td><strong>${p.name}</strong></td>
                 <td>${p.price}</td>
                 <td><small>${p.talle || '-'}</small><br><small>${p.color || '-'}</small></td>
                 <td>
@@ -150,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('price').value = product.price;
         document.getElementById('talle').value = product.talle || '';
         document.getElementById('color').value = product.color || '';
-        document.getElementById('category').value = product.category || '';
         
         imagePreview.innerHTML = '';
         const imgs = product.images || [product.image];

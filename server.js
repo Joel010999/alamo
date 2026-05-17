@@ -4,58 +4,52 @@ const session = require('express-session');
 const fs = require('fs-extra');
 const path = require('path');
 const multer = require('multer');
+const { Pool } = require('pg');
+const compression = require('compression');
+
+const USE_PG = !!process.env.DATABASE_URL;
+let pool;
+
+if (USE_PG) {
+    pool = new Pool({
+        connectionString: process.env.DATABASE_URL
+    });
+
+    // Migrate DB to include position field if not exists
+    pool.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS "position" INTEGER DEFAULT 0;')
+        .catch(err => console.error("Error migrating DB:", err));
+}
+
+const DATA_FILE = path.join(__dirname, 'data', 'products.json');
+
+async function readProducts() {
+    try {
+        if (await fs.exists(DATA_FILE)) {
+            return await fs.readJson(DATA_FILE);
+        }
+    } catch (e) {
+        console.error("Error reading JSON", e);
+    }
+    return [];
+}
+
+async function writeProducts(data) {
+    await fs.writeJson(DATA_FILE, data, { spaces: 2 });
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configuration
-const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'bornand';
 
-// Determine storage mode
-const USE_PG = !!process.env.DATABASE_URL;
-let pool = null;
-
-if (USE_PG) {
-    const { Pool } = require('pg');
-    pool = new Pool({ connectionString: process.env.DATABASE_URL });
-    // Migrate DB
-    pool.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS "position" INTEGER DEFAULT 0;')
-        .catch(err => console.error("Error migrating DB (position):", err));
-    pool.query("ALTER TABLE products ADD COLUMN IF NOT EXISTS category VARCHAR(50) DEFAULT '';")
-        .catch(err => console.error("Error migrating DB (category):", err));
-    console.log("📦 Usando PostgreSQL como almacenamiento.");
-} else {
-    console.log("📁 Usando JSON local como almacenamiento (no se detectó DATABASE_URL).");
-}
-
 // Ensure directories exist
-fs.ensureDirSync(path.join(__dirname, 'data'));
 fs.ensureDirSync(UPLOADS_DIR);
-
-// --- JSON Storage Functions (fallback local) ---
-async function readProducts() {
-    try {
-        const data = await fs.readFile(PRODUCTS_FILE, 'utf8');
-        const products = JSON.parse(data);
-        return products.map(p => {
-            if (!p.images && p.image) p.images = [p.image];
-            else if (!p.images) p.images = [];
-            if (!p.category) p.category = '';
-            if (p.position === undefined) p.position = 0;
-            return p;
-        });
-    } catch (error) {
-        return [];
-    }
-}
-
-async function writeProducts(products) {
-    await fs.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 4));
-}
+fs.ensureDirSync(path.join(__dirname, 'data'));
 
 // Middleware
+app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -76,6 +70,8 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
+
+// Storage handled by PostgreSQL or JSON depending on USE_PG
 
 // Auth Middleware
 const requireAuth = (req, res, next) => {
@@ -108,9 +104,7 @@ app.get('/api/check-auth', (req, res) => {
     res.json({ authenticated: !!req.session.authenticated });
 });
 
-// ===================== PRODUCTS CRUD =====================
-
-// GET all products
+// Products CRUD
 app.get('/api/products', async (req, res) => {
     try {
         if (USE_PG) {
@@ -118,7 +112,10 @@ app.get('/api/products', async (req, res) => {
             res.json(result.rows);
         } else {
             const products = await readProducts();
-            products.sort((a, b) => (a.position || 0) - (b.position || 0));
+            products.sort((a, b) => {
+                if (a.position !== b.position) return a.position - (b.position || 0);
+                return b.id - a.id;
+            });
             res.json(products);
         }
     } catch (error) {
@@ -127,7 +124,6 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
-// REORDER products
 app.patch('/api/products/reorder', requireAuth, async (req, res) => {
     try {
         const { orderedIds } = req.body;
@@ -140,7 +136,7 @@ app.patch('/api/products/reorder', requireAuth, async (req, res) => {
         } else {
             const products = await readProducts();
             for (let i = 0; i < orderedIds.length; i++) {
-                const p = products.find(x => x.id === orderedIds[i]);
+                const p = products.find(x => x.id == orderedIds[i]);
                 if (p) p.position = i;
             }
             await writeProducts(products);
@@ -152,7 +148,6 @@ app.patch('/api/products/reorder', requireAuth, async (req, res) => {
     }
 });
 
-// CREATE product
 app.post('/api/products', requireAuth, upload.array('images', 10), async (req, res) => {
     try {
         // Handle images
@@ -167,8 +162,8 @@ app.post('/api/products', requireAuth, upload.array('images', 10), async (req, r
 
         if (USE_PG) {
             const result = await pool.query(
-                'INSERT INTO products (name, price, talle, color, image, images, category) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-                [req.body.name, req.body.price, req.body.talle || "", req.body.color || "", image, JSON.stringify(images), req.body.category || ""]
+                'INSERT INTO products (name, price, talle, color, image, images) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                [req.body.name, req.body.price, req.body.talle || "", req.body.color || "", image, JSON.stringify(images)]
             );
             res.json(result.rows[0]);
         } else {
@@ -179,10 +174,9 @@ app.post('/api/products', requireAuth, upload.array('images', 10), async (req, r
                 price: req.body.price,
                 talle: req.body.talle || "",
                 color: req.body.color || "",
-                category: req.body.category || "",
-                images: images,
                 image: image,
-                position: 0
+                images: images,
+                position: products.length
             };
             products.push(newProduct);
             await writeProducts(products);
@@ -194,11 +188,10 @@ app.post('/api/products', requireAuth, upload.array('images', 10), async (req, r
     }
 });
 
-// UPDATE product
 app.put('/api/products/:id', requireAuth, upload.array('images', 10), async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-
+        
         if (USE_PG) {
             const currentResult = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
             if (currentResult.rows.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });
@@ -209,12 +202,12 @@ app.put('/api/products/:id', requireAuth, upload.array('images', 10), async (req
             const price = req.body.price || currentProduct.price;
             const talle = req.body.talle !== undefined ? req.body.talle : currentProduct.talle;
             const color = req.body.color !== undefined ? req.body.color : currentProduct.color;
-            const category = req.body.category !== undefined ? req.body.category : (currentProduct.category || '');
 
             let images = currentProduct.images;
             let image = currentProduct.image;
 
             if (req.files && req.files.length > 0) {
+                // Delete old images if they were in uploads
                 const oldImages = currentProduct.images || (currentProduct.image ? [currentProduct.image] : []);
                 for (const img of oldImages) {
                     if (img && img.startsWith('uploads/')) {
@@ -227,14 +220,14 @@ app.put('/api/products/:id', requireAuth, upload.array('images', 10), async (req
             }
 
             const updateResult = await pool.query(
-                'UPDATE products SET name = $1, price = $2, talle = $3, color = $4, image = $5, images = $6, category = $7 WHERE id = $8 RETURNING *',
-                [name, price, talle, color, image, JSON.stringify(images), category, id]
+                'UPDATE products SET name = $1, price = $2, talle = $3, color = $4, image = $5, images = $6 WHERE id = $7 RETURNING *',
+                [name, price, talle, color, image, JSON.stringify(images), id]
             );
 
             res.json(updateResult.rows[0]);
         } else {
             const products = await readProducts();
-            const index = products.findIndex(p => p.id === id);
+            const index = products.findIndex(p => p.id == id);
             if (index === -1) return res.status(404).json({ error: 'Producto no encontrado' });
 
             const currentProduct = products[index];
@@ -243,8 +236,7 @@ app.put('/api/products/:id', requireAuth, upload.array('images', 10), async (req
                 name: req.body.name || currentProduct.name,
                 price: req.body.price || currentProduct.price,
                 talle: req.body.talle !== undefined ? req.body.talle : currentProduct.talle,
-                color: req.body.color !== undefined ? req.body.color : currentProduct.color,
-                category: req.body.category !== undefined ? req.body.category : (currentProduct.category || '')
+                color: req.body.color !== undefined ? req.body.color : currentProduct.color
             };
 
             if (req.files && req.files.length > 0) {
@@ -269,16 +261,17 @@ app.put('/api/products/:id', requireAuth, upload.array('images', 10), async (req
     }
 });
 
-// DELETE product
 app.delete('/api/products/:id', requireAuth, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-
+        
         if (USE_PG) {
             const currentResult = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
             if (currentResult.rows.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });
             
             const product = currentResult.rows[0];
+
+            // Delete all associated images
             const imagesToDelete = product.images || (product.image ? [product.image] : []);
             for (const img of imagesToDelete) {
                 if (img && img.startsWith('uploads/')) {
@@ -290,7 +283,7 @@ app.delete('/api/products/:id', requireAuth, async (req, res) => {
             await pool.query('DELETE FROM products WHERE id = $1', [id]);
         } else {
             let products = await readProducts();
-            const product = products.find(p => p.id === id);
+            const product = products.find(p => p.id == id);
             if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
 
             const imagesToDelete = product.images || (product.image ? [product.image] : []);
@@ -301,10 +294,9 @@ app.delete('/api/products/:id', requireAuth, async (req, res) => {
                 }
             }
 
-            products = products.filter(p => p.id !== id);
+            products = products.filter(p => p.id != id);
             await writeProducts(products);
         }
-        
         res.json({ success: true });
     } catch (error) {
         console.error("Error deleting product:", error);
@@ -313,9 +305,10 @@ app.delete('/api/products/:id', requireAuth, async (req, res) => {
 });
 
 // --- Static Files ---
+const cacheOptions = { maxAge: '30d' };
 
 // Serve uploads folder
-app.use('/uploads', express.static(UPLOADS_DIR));
+app.use('/uploads', express.static(UPLOADS_DIR, cacheOptions));
 
 // Admin route
 app.get('/admin', (req, res) => {
@@ -323,7 +316,7 @@ app.get('/admin', (req, res) => {
 });
 
 // Serve main app
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, cacheOptions));
 
 app.listen(PORT, () => {
     console.log(`Servidor ÁLAMO corriendo en http://localhost:${PORT}`);

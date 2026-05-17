@@ -285,44 +285,6 @@
 .btn-sm { padding: 8px 16px; font-size: 0.7rem; }
 .w-full { width: 100%; }
 
-/* Category badge in admin table */
-.category-badge {
-    display: inline-block;
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--clr-primary);
-    background: rgba(162, 130, 113, 0.1);
-    border: 1px solid rgba(162, 130, 113, 0.2);
-    padding: 3px 10px;
-    border-radius: 50px;
-    margin-top: 6px;
-    font-weight: 500;
-}
-
-/* Form select */
-.form-select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #EAE5E2;
-    border-radius: var(--border-radius-sm);
-    font-family: inherit;
-    font-size: 1rem;
-    background: white;
-    color: var(--clr-text-main);
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237A746F' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-}
-
-.form-select:focus {
-    outline: none;
-    border-color: var(--clr-primary);
-}
-
 @media (max-width: 768px) {
     .form-row { grid-template-columns: 1fr; }
     .admin-table th:nth-child(3), 

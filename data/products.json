@@ -1,103 +1,623 @@
 [
-    {
-        "id": 1,
-        "name": "Conjunto Bruma",
-        "price": "$40.000",
-        "talle": "M, L",
-        "color": "Crudo, Blanco, Chocolate",
-        "image": "image copy 17.webp"
-    },
-    {
-        "id": 2,
-        "name": "Vestido Espalda Descubierta",
-        "price": "$30.000",
-        "talle": "S, M",
-        "image": "image copy 2.webp"
-    },
-    {
-        "id": 3,
-        "name": "Conjunto Arena",
-        "price": "$49.000",
-        "talle": "S, M, L",
-        "image": "image copy 7.webp"
-    },
-    {
-        "id": 4,
-        "name": "Conjunto Lino",
-        "price": "$48.000",
-        "talle": "S, M, L",
-        "image": "image copy 9.webp"
-    },
-    {
-        "id": 5,
-        "name": "Conjunto Rayado",
-        "price": "$29.000",
-        "talle": "M, L",
-        "image": "image copy 10.webp"
-    },
-    {
-        "id": 6,
-        "name": "Buzitos Finitos",
-        "price": "$20.000",
-        "talle": "S, M",
-        "color": "Gris, Marrón",
-        "image": "image copy 22.webp"
-    },
-    {
-        "id": 7,
-        "name": "Pantalón Amplio",
-        "price": "$25.000",
-        "talle": "M, L",
-        "color": "Negro, Beige, Marrón",
-        "image": "image copy 23.webp"
-    },
-    {
-        "id": 8,
-        "name": "Conjunto Short Chocolate",
-        "price": "$35.500",
-        "talle": "S, M",
-        "image": "image copy 6.webp"
-    },
-    {
-        "id": 9,
-        "name": "Básicas",
-        "price": "$15.000",
-        "talle": "S, M",
-        "color": "Marrón, Negro, Crudo",
-        "image": "image copy 29.webp"
-    },
-    {
-        "id": 10,
-        "name": "Roma Set",
-        "price": "$38.000",
-        "talle": "S, M, L",
-        "color": "Chocolate, Blanco",
-        "image": "image copy 12.webp"
-    },
-    {
-        "id": 11,
-        "name": "Top S/M",
-        "price": "$31.000",
-        "talle": "S, M",
-        "image": "image copy 13.webp"
-    },
-    {
-        "id": 12,
-        "name": "Cintos Leather",
-        "price": "$20.000",
-        "image": "image copy 19.webp"
-    },
-    {
-        "id": 13,
-        "name": "Lentes Premium",
-        "price": "$20.000",
-        "image": "image copy 24.webp"
-    },
-    {
-        "id": 14,
-        "name": "Conjunto Comfy",
-        "price": "$38.000",
-        "talle": "S, M, L",
-        "image": "image copy 27.webp"
-    }
+  {
+    "id": 64,
+    "name": "Buzitos ",
+    "price": "38.000",
+    "talle": "",
+    "color": "Beige, marrón, verde ",
+    "image": "uploads/1778113730372-230380620.png",
+    "images": [
+      "uploads/1778113730372-230380620.png",
+      "uploads/1778113732302-218176034.png",
+      "uploads/1778113749810-574140027.jpeg"
+    ],
+    "position": 0
+  },
+  {
+    "id": 60,
+    "name": "Body musculosa ",
+    "price": "$24.000",
+    "talle": "S,M",
+    "color": "Bordo vino ",
+    "image": "uploads/1778885307282-812126930.png",
+    "images": [
+      "uploads/1778885307282-812126930.png"
+    ],
+    "position": 1
+  },
+  {
+    "id": 61,
+    "name": "Body espalda descubierta ",
+    "price": "$24.000",
+    "talle": "S,M",
+    "color": "Negro ",
+    "image": "uploads/1778885357255-193169797.png",
+    "images": [
+      "uploads/1778885357255-193169797.png"
+    ],
+    "position": 2
+  },
+  {
+    "id": 68,
+    "name": "Body musculosa ",
+    "price": "$24.000",
+    "talle": "S,M,L",
+    "color": "Marrón ",
+    "image": "uploads/1778885602282-249609059.png",
+    "images": [
+      "uploads/1778885602282-249609059.png"
+    ],
+    "position": 3
+  },
+  {
+    "id": 58,
+    "name": "Bodyes",
+    "price": "$22.000",
+    "talle": "M,L",
+    "color": "Negro, vino ",
+    "image": "uploads/1776740854476-733673267.png",
+    "images": [
+      "uploads/1776740854476-733673267.png"
+    ],
+    "position": 4
+  },
+  {
+    "id": 69,
+    "name": "Top ",
+    "price": "$14.000",
+    "talle": "S",
+    "color": "Negro ",
+    "image": "uploads/1778886140415-499716814.png",
+    "images": [
+      "uploads/1778886140415-499716814.png",
+      "uploads/1778886141166-761534156.png"
+    ],
+    "position": 5
+  },
+  {
+    "id": 71,
+    "name": "Top",
+    "price": "$14.000",
+    "talle": "S",
+    "color": "Marrón ",
+    "image": "uploads/1778886211545-65510718.png",
+    "images": [
+      "uploads/1778886211545-65510718.png"
+    ],
+    "position": 6
+  },
+  {
+    "id": 73,
+    "name": "Top ",
+    "price": "$14.000",
+    "talle": "S",
+    "color": "Violeta oscuro ",
+    "image": "uploads/1778886774893-813422627.png",
+    "images": [
+      "uploads/1778886774893-813422627.png"
+    ],
+    "position": 7
+  },
+  {
+    "id": 65,
+    "name": "Remerita con bufandita en el cuello ",
+    "price": "$15.000",
+    "talle": "S,M",
+    "color": "Vino ",
+    "image": "uploads/1778887128350-994094322.png",
+    "images": [
+      "uploads/1778887128350-994094322.png"
+    ],
+    "position": 8
+  },
+  {
+    "id": 67,
+    "name": "Remera transparente  mangas acampanadas ",
+    "price": "$20.000",
+    "talle": "S,M",
+    "color": "Negro ",
+    "image": "uploads/1778810978946-233923582.png",
+    "images": [
+      "uploads/1778810978946-233923582.png"
+    ],
+    "position": 9
+  },
+  {
+    "id": 62,
+    "name": "Conjunto anne",
+    "price": "$55.000",
+    "talle": "S,M",
+    "color": "",
+    "image": "uploads/1777606436881-199301741.jpeg",
+    "images": [
+      "uploads/1777606436881-199301741.jpeg",
+      "uploads/1777606451243-50038443.jpeg",
+      "uploads/1777606480279-36069538.jpeg"
+    ],
+    "position": 10
+  },
+  {
+    "id": 43,
+    "name": "Conjunto sastrero ",
+    "price": "$38000",
+    "talle": "M ",
+    "color": "Gris",
+    "image": "uploads/1775725289385-714711258.png",
+    "images": [
+      "uploads/1775725289385-714711258.png",
+      "uploads/1775725294849-690580451.png"
+    ],
+    "position": 11
+  },
+  {
+    "id": 66,
+    "name": "Pollera AMELI de tul ",
+    "price": "$25.000",
+    "talle": "S,M,L",
+    "color": "",
+    "image": "uploads/1778810849380-583881065.png",
+    "images": [
+      "uploads/1778810849380-583881065.png"
+    ],
+    "position": 12
+  },
+  {
+    "id": 26,
+    "name": "Conjunto sastrero",
+    "price": "Pantalon $30.000 Chaleco $20.000",
+    "talle": "s, l , m, xl ",
+    "color": "Negro",
+    "image": "uploads/1775681439200-896294412.jpeg",
+    "images": [
+      "uploads/1775681439200-896294412.jpeg"
+    ],
+    "position": 13
+  },
+  {
+    "id": 42,
+    "name": "SASTRERO  A RAYAS (tiro alto)",
+    "price": "$30.000",
+    "talle": "S,M",
+    "color": "",
+    "image": "uploads/1775725089736-718480462.jpeg",
+    "images": [
+      "uploads/1775725089736-718480462.jpeg"
+    ],
+    "position": 14
+  },
+  {
+    "id": 5,
+    "name": "Conjunto arena",
+    "price": "49.000",
+    "talle": "S,M, L",
+    "color": "",
+    "image": "uploads/1775680610335-211963565.jpeg",
+    "images": [
+      "uploads/1775680610335-211963565.jpeg",
+      "uploads/1775680610546-934897088.jpeg"
+    ],
+    "position": 15
+  },
+  {
+    "id": 3,
+    "name": "Conjunto bruma",
+    "price": "$40.000",
+    "talle": "M y L",
+    "color": "Color crudo  Blanco  chocolate",
+    "image": "uploads/1775733094726-699160459.jpeg",
+    "images": [
+      "uploads/1775733094726-699160459.jpeg",
+      "uploads/1775733094934-451181768.png",
+      "uploads/1775733095472-450622284.png"
+    ],
+    "position": 16
+  },
+  {
+    "id": 29,
+    "name": "conjunto bruma",
+    "price": "$40.000",
+    "talle": "M, L",
+    "color": "",
+    "image": "uploads/1775684841590-742809827.jpeg",
+    "images": [
+      "uploads/1775684841590-742809827.jpeg",
+      "uploads/1775684841799-410036519.jpeg"
+    ],
+    "position": 17
+  },
+  {
+    "id": 4,
+    "name": "Conjunto bruma",
+    "price": "$40.000",
+    "talle": "L ",
+    "color": "Blanco",
+    "image": "uploads/1775680584125-911305668.jpeg",
+    "images": [
+      "uploads/1775680584125-911305668.jpeg"
+    ],
+    "position": 18
+  },
+  {
+    "id": 11,
+    "name": "Conjunto cacao",
+    "price": "$37.000",
+    "talle": "s, m, l ",
+    "color": "cacao",
+    "image": "uploads/1775680960848-779254352.jpeg",
+    "images": [
+      "uploads/1775680960848-779254352.jpeg"
+    ],
+    "position": 19
+  },
+  {
+    "id": 55,
+    "name": "Pollera larga ",
+    "price": "$30.000",
+    "talle": "S,M",
+    "color": "Marrón ",
+    "image": "uploads/1775929218186-74499655.jpeg",
+    "images": [
+      "uploads/1775929218186-74499655.jpeg",
+      "uploads/1775929218824-166891859.jpeg",
+      "uploads/1775929221541-968113161.jpeg"
+    ],
+    "position": 20
+  },
+  {
+    "id": 45,
+    "name": "Pollera larga ",
+    "price": "$22.000",
+    "talle": "S,M,L ",
+    "color": "Blanco",
+    "image": "uploads/1775733386185-408573676.jpeg",
+    "images": [
+      "uploads/1775733386185-408573676.jpeg"
+    ],
+    "position": 21
+  },
+  {
+    "id": 7,
+    "name": "Conjunto Roma",
+    "price": "$25.000",
+    "talle": "s,m, l",
+    "color": "",
+    "image": "uploads/1775680676932-665754033.jpeg",
+    "images": [
+      "uploads/1775680676932-665754033.jpeg"
+    ],
+    "position": 22
+  },
+  {
+    "id": 6,
+    "name": "Conjunto Roma",
+    "price": "$25.000",
+    "talle": " s, m y L",
+    "color": "Color chocolate y blanco",
+    "image": "uploads/1775680798190-729416941.jpeg",
+    "images": [
+      "uploads/1775680798190-729416941.jpeg",
+      "uploads/1775680798443-207245010.jpeg"
+    ],
+    "position": 23
+  },
+  {
+    "id": 21,
+    "name": "Buzitos finitos",
+    "price": "$25.000",
+    "talle": "s, m",
+    "color": "marron y gris",
+    "image": "uploads/1775681297281-70420010.jpeg",
+    "images": [
+      "uploads/1775681297281-70420010.jpeg",
+      "uploads/1775681297645-852138783.jpeg"
+    ],
+    "position": 24
+  },
+  {
+    "id": 13,
+    "name": "Conjunto pantalon+ chaleco",
+    "price": "$32.000",
+    "talle": "S, M ",
+    "color": "Blanco",
+    "image": "uploads/1775733481113-325426255.jpeg",
+    "images": [
+      "uploads/1775733481113-325426255.jpeg",
+      "uploads/1775733482544-389186304.jpeg"
+    ],
+    "position": 25
+  },
+  {
+    "id": 10,
+    "name": "Conjunto a rayas",
+    "price": "$29.000",
+    "talle": " M Y L",
+    "color": "",
+    "image": "uploads/1775680930823-982428877.jpeg",
+    "images": [
+      "uploads/1775680930823-982428877.jpeg"
+    ],
+    "position": 26
+  },
+  {
+    "id": 12,
+    "name": "Conjunto Lino",
+    "price": "$48000",
+    "talle": "M, L",
+    "color": "Blanco",
+    "image": "uploads/1775696598515-699112243.jpeg",
+    "images": [
+      "uploads/1775696598515-699112243.jpeg"
+    ],
+    "position": 27
+  },
+  {
+    "id": 9,
+    "name": "Vestido espalda descubierta ",
+    "price": "$30.000",
+    "talle": "s, m",
+    "color": "",
+    "image": "uploads/1775680866215-214233293.jpeg",
+    "images": [
+      "uploads/1775680866215-214233293.jpeg",
+      "uploads/1775680866486-464656228.jpeg"
+    ],
+    "position": 28
+  },
+  {
+    "id": 16,
+    "name": "Pantalones palazo",
+    "price": "$25.000",
+    "talle": "s, m y l",
+    "color": "Negro Beige  Marrón",
+    "image": "uploads/1775681084398-782178200.jpeg",
+    "images": [
+      "uploads/1775681084398-782178200.jpeg"
+    ],
+    "position": 29
+  },
+  {
+    "id": 46,
+    "name": "Pantalones palazo ",
+    "price": "$25.000",
+    "talle": "S, M, L, Xl",
+    "color": "Beige, negro, marrón",
+    "image": "uploads/1775733566686-373206429.jpeg",
+    "images": [
+      "uploads/1775733566686-373206429.jpeg",
+      "uploads/1775733567630-52931809.jpeg",
+      "uploads/1775733568876-450573460.jpeg",
+      "uploads/1775733570367-303604269.jpeg",
+      "uploads/1775733572873-125988259.jpeg"
+    ],
+    "position": 30
+  },
+  {
+    "id": 18,
+    "name": "Remerita básica morley",
+    "price": "$15mil",
+    "talle": "s, m ",
+    "color": " negro y marron",
+    "image": "uploads/1775733697318-696084484.jpeg",
+    "images": [
+      "uploads/1775733697318-696084484.jpeg",
+      "uploads/1775733702627-490766279.jpeg"
+    ],
+    "position": 31
+  },
+  {
+    "id": 52,
+    "name": "Musculosa morley ",
+    "price": "$20.000",
+    "talle": "S",
+    "color": "Gris ",
+    "image": "uploads/1775928918563-782055022.jpeg",
+    "images": [
+      "uploads/1775928918563-782055022.jpeg",
+      "uploads/1775928918762-473019679.jpeg"
+    ],
+    "position": 32
+  },
+  {
+    "id": 53,
+    "name": "Musculosa morley polera ",
+    "price": "$20.000",
+    "talle": "S",
+    "color": "Marrón",
+    "image": "uploads/1775928967178-975129400.jpeg",
+    "images": [
+      "uploads/1775928967178-975129400.jpeg",
+      "uploads/1775928967422-703340197.jpeg"
+    ],
+    "position": 33
+  },
+  {
+    "id": 41,
+    "name": "CINTOS LEATHER",
+    "price": "$22.000",
+    "talle": "",
+    "color": "",
+    "image": "uploads/1775955035629-101140403.jpeg",
+    "images": [
+      "uploads/1775955035629-101140403.jpeg",
+      "uploads/1775955036310-758655431.jpeg",
+      "uploads/1775955037747-892780572.jpeg"
+    ],
+    "position": 34
+  },
+  {
+    "id": 40,
+    "name": "LENTES DE SOL animal print ",
+    "price": "$22.000",
+    "talle": "",
+    "color": "",
+    "image": "uploads/1778809575244-374402016.png",
+    "images": [
+      "uploads/1778809575244-374402016.png"
+    ],
+    "position": 35
+  },
+  {
+    "id": 36,
+    "name": "LENTES ANIMAL PRINT sin aumento",
+    "price": "$22.000",
+    "talle": "",
+    "color": "",
+    "image": "uploads/1778809428601-192109386.png",
+    "images": [
+      "uploads/1778809428601-192109386.png"
+    ],
+    "position": 36
+  },
+  {
+    "id": 54,
+    "name": "Collares ",
+    "price": "$12.000",
+    "talle": "",
+    "color": "",
+    "image": "uploads/1775929111983-762800879.jpeg",
+    "images": [
+      "uploads/1775929111983-762800879.jpeg",
+      "uploads/1775929112340-865973671.jpeg",
+      "uploads/1775929112486-486040280.jpeg",
+      "uploads/1775929112536-175616330.jpeg",
+      "uploads/1775929112611-347465400.jpeg"
+    ],
+    "position": 37
+  },
+  {
+    "id": 31,
+    "name": "BOLSO NOX",
+    "price": "$38.000",
+    "talle": "",
+    "color": "",
+    "image": "uploads/1778809023221-707733258.jpeg",
+    "images": [
+      "uploads/1778809023221-707733258.jpeg",
+      "uploads/1778809032561-818168006.jpeg"
+    ],
+    "position": 38
+  },
+  {
+    "id": 30,
+    "name": "Bolsos NOIR ",
+    "price": "$26.000",
+    "talle": "",
+    "color": "",
+    "image": "uploads/1778808972999-633109877.png",
+    "images": [
+      "uploads/1778808972999-633109877.png",
+      "uploads/1778808978648-788943296.png"
+    ],
+    "position": 39
+  },
+  {
+    "id": 59,
+    "name": "Conjunto lenceria premium",
+    "price": "$40.000",
+    "talle": "M,L,Xl",
+    "color": "Negro",
+    "image": "uploads/1776998172320-119903961.png",
+    "images": [
+      "uploads/1776998172320-119903961.png",
+      "uploads/1776998176800-577395377.png"
+    ],
+    "position": 40
+  },
+  {
+    "id": 15,
+    "name": "Pantalon de lino",
+    "price": "$38.000",
+    "talle": "s, m, l",
+    "color": "",
+    "image": "uploads/1775681048400-17743182.jpeg",
+    "images": [
+      "uploads/1775681048400-17743182.jpeg"
+    ],
+    "position": 41
+  },
+  {
+    "id": 57,
+    "name": "Top de noche lentejuelas ",
+    "price": "21.000",
+    "talle": "S,M,L",
+    "color": "Bordo ",
+    "image": "uploads/1775955419626-886626693.jpeg",
+    "images": [
+      "uploads/1775955419626-886626693.jpeg"
+    ],
+    "position": 42
+  },
+  {
+    "id": 48,
+    "name": "Musculosa básica ",
+    "price": "$13.000",
+    "talle": "S,M",
+    "color": "Amarillo clarito ",
+    "image": "uploads/1775775328734-167052893.png",
+    "images": [
+      "uploads/1775775328734-167052893.png"
+    ],
+    "position": 43
+  },
+  {
+    "id": 49,
+    "name": "Top a rayas mixto",
+    "price": "$17.000",
+    "talle": "S,M",
+    "color": "",
+    "image": "uploads/1775775599889-822969029.png",
+    "images": [
+      "uploads/1775775599889-822969029.png"
+    ],
+    "position": 44
+  },
+  {
+    "id": 19,
+    "name": "Remerita con bordado floral y bretéeles regulables ",
+    "price": "$26.000",
+    "talle": "s y m",
+    "color": "",
+    "image": "uploads/1775681203432-722641098.jpeg",
+    "images": [
+      "uploads/1775681203432-722641098.jpeg"
+    ],
+    "position": 45
+  },
+  {
+    "id": 50,
+    "name": "Remeron palmeras ",
+    "price": "$25.000",
+    "talle": "S,M",
+    "color": "",
+    "image": "uploads/1775776511091-877996575.png",
+    "images": [
+      "uploads/1775776511091-877996575.png",
+      "uploads/1775776514815-521784630.png"
+    ],
+    "position": 46
+  },
+  {
+    "id": 47,
+    "name": "CONJUNTO PLAYA ",
+    "price": "$35.000",
+    "talle": "S,L",
+    "color": "Blanco ",
+    "image": "uploads/1775775021484-423862176.png",
+    "images": [
+      "uploads/1775775021484-423862176.png"
+    ],
+    "position": 47
+  },
+  {
+    "id": 27,
+    "name": "Vestido beige",
+    "price": "$25.000",
+    "talle": " s, m, L",
+    "color": "Beige",
+    "image": "uploads/1775681470815-266233002.jpeg",
+    "images": [
+      "uploads/1775681470815-266233002.jpeg"
+    ],
+    "position": 48
+  }
 ]
