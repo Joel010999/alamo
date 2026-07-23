@@ -98,6 +98,25 @@ async function writeProducts(data) {
     await fs.writeJson(DATA_FILE, data, { spaces: 2 });
 }
 
+// ── Settings (about image, etc.) ──────────────────────────────────────────────
+const SETTINGS_FILE = path.join(__dirname, 'data', 'settings.json');
+
+async function readSettings() {
+    try {
+        if (await fs.exists(SETTINGS_FILE)) {
+            return await fs.readJson(SETTINGS_FILE);
+        }
+    } catch (e) {
+        console.error("Error reading settings JSON", e);
+    }
+    return { aboutImage: 'image copy 4.webp' }; // default
+}
+
+async function writeSettings(data) {
+    await fs.writeJson(SETTINGS_FILE, data, { spaces: 2 });
+}
+
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -184,6 +203,27 @@ app.get('/api/products', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener productos' });
     }
 });
+
+// Single product by ID
+app.get('/api/products/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        if (USE_PG) {
+            const result = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+            if (result.rows.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });
+            res.json(result.rows[0]);
+        } else {
+            const products = await readProducts();
+            const product = products.find(p => p.id == id);
+            if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
+            res.json(product);
+        }
+    } catch (error) {
+        console.error("Error fetching product:", error);
+        res.status(500).json({ error: 'Error al obtener producto' });
+    }
+});
+
 
 app.patch('/api/products/reorder', requireAuth, async (req, res) => {
     try {
@@ -374,8 +414,62 @@ app.delete('/api/products/:id', requireAuth, async (req, res) => {
     }
 });
 
+// ── Settings Routes (about image) ────────────────────────────────────────────
+
+// GET current settings
+app.get('/api/settings', async (req, res) => {
+    try {
+        const settings = await readSettings();
+        res.json(settings);
+    } catch (err) {
+        res.status(500).json({ error: 'Error al obtener configuración' });
+    }
+});
+
+// POST — update about image (upload new file)
+app.post('/api/settings/about-image', requireAuth, upload.single('image'), async (req, res) => {
+    try {
+        const settings = await readSettings();
+
+        // Delete old uploaded image if it was in uploads/
+        if (settings.aboutImage && settings.aboutImage.startsWith('uploads/')) {
+            const oldPath = path.join(__dirname, settings.aboutImage);
+            if (await fs.exists(oldPath)) await fs.remove(oldPath);
+        }
+
+        if (!req.file) return res.status(400).json({ error: 'No se recibió ninguna imagen' });
+
+        settings.aboutImage = `uploads/${req.file.filename}`;
+        await writeSettings(settings);
+        res.json({ success: true, aboutImage: settings.aboutImage });
+    } catch (err) {
+        console.error('Error updating about image:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// DELETE — remove about image (revert to default)
+app.delete('/api/settings/about-image', requireAuth, async (req, res) => {
+    try {
+        const settings = await readSettings();
+
+        if (settings.aboutImage && settings.aboutImage.startsWith('uploads/')) {
+            const imgPath = path.join(__dirname, settings.aboutImage);
+            if (await fs.exists(imgPath)) await fs.remove(imgPath);
+        }
+
+        settings.aboutImage = 'image copy 4.webp'; // revert to default
+        await writeSettings(settings);
+        res.json({ success: true, aboutImage: settings.aboutImage });
+    } catch (err) {
+        console.error('Error deleting about image:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // --- Static Files ---
 const cacheOptions = { maxAge: '30d' };
+
 
 // Serve uploads folder
 app.use('/uploads', express.static(UPLOADS_DIR, cacheOptions));

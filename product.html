@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÁLAMO — Detalle de Prenda</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="css/style.css?v=1.1.2">
+    <!-- Product page specific styles -->
+    <link rel="stylesheet" href="css/product.css?v=1.0.0">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-content">
+            <a href="/" class="logo text-logo">ÁLAMO</a>
+            <div class="nav-socials">
+                <a href="https://www.instagram.com/alamo.tiendaok?igsh=d3Z2eXJnMGM4dGtv" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61587053092785" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://api.whatsapp.com/send?phone=543512751860&text=Hola,%20quería%20hacer%20una%20consulta" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pd-main">
+
+        <!-- Breadcrumb -->
+        <div class="pd-breadcrumb container">
+            <a href="/">Inicio</a>
+            <span class="pd-breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
+            <a href="/#catalogo">Catálogo</a>
+            <span class="pd-breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
+            <span id="pd-breadcrumb-name">Cargando...</span>
+        </div>
+
+        <!-- Product Detail Layout -->
+        <section class="pd-section container">
+
+            <!-- LEFT: Gallery -->
+            <div class="pd-gallery">
+                <!-- Main image / carousel -->
+                <div class="pd-main-media" id="pd-main-media">
+                    <div class="pd-loading-spinner"><i class="fas fa-circle-notch fa-spin"></i></div>
+                </div>
+                <!-- Thumbnail strip -->
+                <div class="pd-thumbs" id="pd-thumbs"></div>
+            </div>
+
+            <!-- RIGHT: Info -->
+            <div class="pd-info">
+                <h1 class="pd-name" id="pd-name">Cargando...</h1>
+                <p class="pd-price" id="pd-price"></p>
+
+                <div class="pd-divider"></div>
+
+                <div class="pd-meta" id="pd-meta"></div>
+
+                <div class="pd-divider"></div>
+
+                <a href="#" id="pd-wa-btn" target="_blank" class="btn pd-wa-btn">
+                    <i class="fab fa-whatsapp"></i>
+                    Consultar por WhatsApp
+                </a>
+
+                <a href="/#catalogo" class="pd-back-link">
+                    <i class="fas fa-arrow-left"></i> Volver al catálogo
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Floating WA button -->
+    <a href="https://api.whatsapp.com/send?phone=543512751860&text=Hola,%20quiero%20hacer%20una%20consulta" target="_blank" class="float-wa" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="js/product.js?v=1.0.0"></script>
+</body>
+</html>

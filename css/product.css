@@ -1,0 +1,347 @@
+/* ═══════════════════════════════════════════════════════════════
+   PRODUCT DETAIL PAGE  —  css/product.css
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Page layout ─────────────────────────────────────────────── */
+.pd-main {
+    padding-top: 110px;
+    min-height: 100vh;
+    background: var(--clr-bg);
+}
+
+/* ── Breadcrumb ───────────────────────────────────────────────── */
+.pd-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--clr-text-muted);
+    margin-bottom: 40px;
+}
+
+.pd-breadcrumb a {
+    color: var(--clr-text-muted);
+    transition: color 0.2s;
+}
+
+.pd-breadcrumb a:hover {
+    color: var(--clr-primary);
+}
+
+.pd-breadcrumb-sep {
+    font-size: 0.6rem;
+    opacity: 0.5;
+}
+
+#pd-breadcrumb-name {
+    color: var(--clr-text-main);
+    font-weight: 500;
+}
+
+/* ── Two-column layout ────────────────────────────────────────── */
+.pd-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+    align-items: start;
+    padding-bottom: 100px;
+}
+
+/* ── LEFT — Gallery ───────────────────────────────────────────── */
+.pd-gallery {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Main display */
+.pd-main-media {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: #ede8e3;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pd-main-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.pd-main-media:hover img {
+    transform: scale(1.04);
+}
+
+/* Loading spinner */
+.pd-loading-spinner {
+    font-size: 2rem;
+    color: var(--clr-primary);
+    opacity: 0.5;
+}
+
+/* Main carousel */
+.pd-carousel {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.pd-carousel-stage {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pd-carousel-item {
+    min-width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.pd-carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Carousel nav arrows */
+.pd-carousel-prev,
+.pd-carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--clr-text-main);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transition: var(--transition);
+    z-index: 5;
+}
+
+.pd-carousel-prev { left: 14px; }
+.pd-carousel-next { right: 14px; }
+
+.pd-carousel-prev:hover,
+.pd-carousel-next:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+
+/* Dots */
+.pd-carousel-dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+
+/* Thumbnail strip */
+.pd-thumbs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pd-thumb {
+    width: 70px;
+    height: 90px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.25s, transform 0.2s;
+    background: #ede8e3;
+    flex-shrink: 0;
+}
+
+.pd-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pd-thumb:hover {
+    transform: translateY(-2px);
+    border-color: var(--clr-text-muted);
+}
+
+.pd-thumb.active {
+    border-color: var(--clr-primary);
+}
+
+/* ── RIGHT — Info panel ───────────────────────────────────────── */
+.pd-info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 10px;
+}
+
+.pd-name {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--clr-text-main);
+    letter-spacing: 0.5px;
+}
+
+.pd-price {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    color: var(--clr-primary);
+    letter-spacing: 0.5px;
+}
+
+.pd-divider {
+    width: 100%;
+    height: 1px;
+    background: #ede8e3;
+}
+
+/* Meta tags block (talle / color) */
+.pd-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pd-meta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pd-meta-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+    color: var(--clr-text-muted);
+}
+
+.pd-meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pd-meta-tag {
+    padding: 8px 18px;
+    border: 1px solid #d9d2cc;
+    border-radius: 2px;
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    color: var(--clr-text-main);
+    background: var(--clr-surface);
+    letter-spacing: 0.5px;
+}
+
+/* WhatsApp CTA */
+.pd-wa-btn {
+    background: var(--clr-wa);
+    color: #fff !important;
+    font-size: 0.85rem;
+    padding: 18px 28px;
+    border-radius: var(--border-radius-sm);
+    width: 100%;
+    gap: 10px;
+    letter-spacing: 1.5px;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.25);
+    transition: var(--transition);
+}
+
+.pd-wa-btn:hover {
+    background: var(--clr-wa-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(37, 211, 102, 0.35);
+    color: #fff !important;
+}
+
+.pd-wa-btn i {
+    font-size: 1.2rem;
+}
+
+/* Back link */
+.pd-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--clr-text-muted);
+    transition: color 0.2s;
+}
+
+.pd-back-link:hover {
+    color: var(--clr-primary);
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .pd-section {
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+
+    .pd-gallery {
+        position: static;
+    }
+
+    .pd-name {
+        font-size: 2rem;
+    }
+
+    .pd-price {
+        font-size: 1.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pd-main {
+        padding-top: 90px;
+    }
+
+    .pd-name {
+        font-size: 1.7rem;
+    }
+
+    .pd-price {
+        font-size: 1.4rem;
+    }
+
+    .pd-thumb {
+        width: 58px;
+        height: 74px;
+    }
+
+    .pd-wa-btn {
+        padding: 15px 20px;
+    }
+}

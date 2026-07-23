@@ -45,6 +45,7 @@
                 <h2>Gestión de Productos</h2>
                 <div class="dashboard-actions">
                     <button id="save-order-btn" class="btn btn-save" style="display: none;"><i class="fas fa-save"></i> Guardar Cambios</button>
+                    <button id="about-image-btn" class="btn btn-secondary"><i class="fas fa-image"></i> Imagen Presentación</button>
                     <button id="add-product-btn" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo Producto</button>
                 </div>
             </div>
@@ -126,6 +127,35 @@
 
                     <button type="submit" class="btn btn-primary w-full">Guardar Cambios</button>
                 </form>
+            </div>
+        </div>
+
+        <!-- About Image Modal -->
+        <div id="about-image-modal" class="modal">
+            <div class="modal-content about-img-modal-content">
+                <span class="close" id="about-img-close">&times;</span>
+                <h3>Imagen de Presentación</h3>
+                <p class="form-help">Esta imagen aparece en la sección "Nuestra Esencia" de la web.</p>
+
+                <div class="about-img-preview-wrap">
+                    <img id="about-img-current" src="" alt="Imagen actual" class="about-img-preview">
+                    <div id="about-img-none" class="about-img-none" style="display:none">
+                        <i class="fas fa-image"></i>
+                        <p>Sin imagen personalizada (usando imagen por defecto)</p>
+                    </div>
+                </div>
+
+                <div class="about-img-actions">
+                    <label for="about-img-upload" class="btn btn-primary about-img-upload-label">
+                        <i class="fas fa-upload"></i> Cambiar imagen
+                        <input type="file" id="about-img-upload" accept="image/*" style="display:none">
+                    </label>
+                    <button id="about-img-delete" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Eliminar
+                    </button>
+                </div>
+
+                <div id="about-img-feedback" class="about-img-feedback"></div>
             </div>
         </div>
     </div>

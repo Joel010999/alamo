@@ -60,7 +60,7 @@
                     <p>En ÁLAMO creemos en el poder de la simpleza. Seleccionamos cuidadosamente cada prenda para ofrecerte una propuesta de valor basada en la calidad, el detalle y la estética contemporánea.</p>
                 </div>
                 <div class="about-image fade-in-up delay-1">
-                    <img src="image copy 4.webp" alt="Estilo Álamo" class="img-fluid rounded-image">
+                    <img id="about-img" src="image copy 4.webp" alt="Estilo Álamo" class="img-fluid rounded-image">
                 </div>
             </div>
         </section>
@@ -143,6 +143,13 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <script src="js/main.js?v=1.1.1"></script>
+    <script src="js/main.js?v=1.1.2"></script>
+    <script>
+        // Load dynamic about image
+        fetch('/api/settings')
+            .then(r => r.json())
+            .then(s => { if (s.aboutImage) document.getElementById('about-img').src = s.aboutImage; })
+            .catch(() => {});
+    </script>
 </body>
 </html>

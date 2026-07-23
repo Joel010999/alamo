@@ -341,6 +341,116 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ── About Image Modal ─────────────────────────────────────────────────────
+
+    const aboutImageBtn   = document.getElementById('about-image-btn');
+    const aboutImageModal = document.getElementById('about-image-modal');
+    const aboutImgClose   = document.getElementById('about-img-close');
+    const aboutImgCurrent = document.getElementById('about-img-current');
+    const aboutImgNone    = document.getElementById('about-img-none');
+    const aboutImgUpload  = document.getElementById('about-img-upload');
+    const aboutImgDelete  = document.getElementById('about-img-delete');
+    const aboutImgFeedback= document.getElementById('about-img-feedback');
+
+    function showAboutFeedback(msg, isError = false) {
+        aboutImgFeedback.textContent = msg;
+        aboutImgFeedback.style.color = isError ? '#c0392b' : '#27ae60';
+        setTimeout(() => { aboutImgFeedback.textContent = ''; }, 3500);
+    }
+
+    function setAboutModalImage(src) {
+        if (src) {
+            aboutImgCurrent.src = src;
+            aboutImgCurrent.style.display = 'block';
+            aboutImgNone.style.display = 'none';
+        } else {
+            aboutImgCurrent.style.display = 'none';
+            aboutImgNone.style.display = 'flex';
+        }
+    }
+
+    async function openAboutImageModal() {
+        aboutImgFeedback.textContent = '';
+        aboutImageModal.style.display = 'flex';
+        try {
+            const res = await fetch('/api/settings');
+            const settings = await res.json();
+            setAboutModalImage(settings.aboutImage || null);
+        } catch (e) {
+            showAboutFeedback('Error al cargar la configuración.', true);
+        }
+    }
+
+    if (aboutImageBtn) aboutImageBtn.onclick = openAboutImageModal;
+
+    if (aboutImgClose) {
+        aboutImgClose.onclick = () => { aboutImageModal.style.display = 'none'; };
+    }
+
+    // Close on backdrop click (but not on the product modal too)
+    window.addEventListener('click', (e) => {
+        if (e.target === aboutImageModal) aboutImageModal.style.display = 'none';
+    });
+
+    // Upload new image
+    if (aboutImgUpload) {
+        aboutImgUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            aboutImgDelete.disabled = true;
+            showAboutFeedback('Subiendo imagen...');
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const res = await fetch('/api/settings/about-image', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    setAboutModalImage(data.aboutImage);
+                    showAboutFeedback('✓ Imagen actualizada correctamente.');
+                } else {
+                    showAboutFeedback(data.error || 'Error al subir imagen.', true);
+                }
+            } catch (err) {
+                showAboutFeedback('Error de red al subir imagen.', true);
+            } finally {
+                aboutImgUpload.value = '';
+                aboutImgDelete.disabled = false;
+            }
+        });
+    }
+
+    // Delete / revert to default
+    if (aboutImgDelete) {
+        aboutImgDelete.onclick = async () => {
+            if (!confirm('¿Eliminar la imagen de presentación y volver a la imagen por defecto?')) return;
+
+            aboutImgDelete.disabled = true;
+            showAboutFeedback('Eliminando...');
+
+            try {
+                const res = await fetch('/api/settings/about-image', { method: 'DELETE' });
+                const data = await res.json();
+                if (res.ok) {
+                    setAboutModalImage(data.aboutImage);
+                    showAboutFeedback('✓ Imagen eliminada. Se restauró la imagen por defecto.');
+                } else {
+                    showAboutFeedback(data.error || 'Error al eliminar.', true);
+                }
+            } catch (err) {
+                showAboutFeedback('Error de red.', true);
+            } finally {
+                aboutImgDelete.disabled = false;
+            }
+        };
+    }
+
     // Init
     checkAuth();
 });
+
